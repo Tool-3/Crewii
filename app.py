@@ -1,44 +1,52 @@
+# app.py
+
 import streamlit as st
 import pandas as pd
 from scraper import scrape_linkedin_profile
 
-st.set_page_config(page_title="LinkedIn Profile Scraper", layout="wide")
+st.set_page_config(page_title="LinkedIn Data Extractor", layout="centered")
 
-st.title("LinkedIn Profile Scraper")
-st.markdown("""
-**Disclaimer:** This tool is for educational purposes only. Scraping LinkedIn is against their Terms of Service.
-""")
+st.title("Professional Profile Data Extractor")
 
-# --- User Input ---
-linkedin_url = st.text_input("Enter a public LinkedIn Profile URL:")
+st.warning(
+    "**Disclaimer:** This tool is for educational purposes only. "
+    "Automated data collection is against LinkedIn's User Agreement."
+)
 
-if st.button("Scrape Profile"):
+# User input field for the LinkedIn profile URL
+linkedin_url = st.text_input(
+    "Enter a public LinkedIn Profile URL",
+    placeholder="https://www.linkedin.com/in/..."
+)
+
+if st.button("Extract Data"):
     if linkedin_url:
-        with st.spinner("Scraping in progress..."):
+        # Display a spinner while the backend function executes
+        with st.spinner("Processing... Extracting data from the provided URL."):
             scraped_data = scrape_linkedin_profile(linkedin_url)
 
         if "error" in scraped_data:
-            st.error(f"An error occurred: {scraped_data['error']}")
+            st.error(f"Failed to scrape profile: {scraped_data['error']}")
         else:
-            st.success("Scraping successful!")
-            st.subheader("Scraped Data")
+            st.success("Data extracted successfully.")
+            st.subheader("Extracted Information")
 
-            # Display the data
+            # Present the data in a clean format
             df = pd.DataFrame([scraped_data])
-            st.dataframe(df)
+            st.dataframe(df, use_container_width=True)
 
-            # --- Optional: Download Button ---
+            # Provide a download option for the data as a CSV file
             @st.cache_data
-            def convert_df_to_csv(df):
-                return df.to_csv(index=False).encode('utf-8')
+            def convert_df_to_csv(df_to_convert):
+                return df_to_convert.to_csv(index=False).encode('utf-8')
 
-            csv = convert_df_to_csv(df)
-
+            csv_data = convert_df_to_csv(df)
             st.download_button(
                label="Download data as CSV",
-               data=csv,
-               file_name='linkedin_profile.csv',
+               data=csv_data,
+               file_name='linkedin_profile_data.csv',
                mime='text/csv',
             )
     else:
-        st.warning("Please enter a LinkedIn URL.")
+        st.info("Please provide a LinkedIn profile URL to proceed.")
+
