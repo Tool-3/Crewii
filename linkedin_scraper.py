@@ -6,22 +6,30 @@ def scrape_linkedin_profile(profile_url: str) -> dict:
     Initiates an HTTP GET request to a public LinkedIn profile and parses the HTML response.
     """
     try:
+        # A realistic User-Agent is crucial.
         headers = {
-            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/109.0.0.0 Safari/537.36'
         }
         
         response = requests.get(profile_url, headers=headers, timeout=10)
-        response.raise_for_status()
+        
+        # Check if the request was successful
+        if response.status_code != 200:
+            return {'error': f"Failed to retrieve the page. Status Code: {response.status_code}"}
 
         soup = BeautifulSoup(response.text, 'html.parser')
 
-        # --- NOTE: These CSS selectors are examples and will need to be updated ---
-        name_element = soup.find('h1', {'class': 'top-card-layout__title'})
-        name = name_element.get_text(strip=True) if name_element else "Not Found"
+        # --- UPDATE THESE SELECTORS ---
+        # You MUST find the new tag and class for each element by inspecting the page.
+        
+        # Example for the name
+        name_element = soup.find('h1', {'class': 'scaffold-layout__main-title'}) # Replace with the correct class for the name
+        name = name_element.get_text(strip=True) if name_element else "Name not found"
 
-        headline_element = soup.find('h2', {'class': 'top-card-layout__headline'})
-        headline = headline_element.get_text(strip=True) if headline_element else "Not Found"
-
+        # Example for the headline
+        headline_element = soup.find('div', {'class': 'text-body-medium break-words'}) # Replace with the correct class for the headline
+        headline = headline_element.get_text(strip=True) if headline_element else "Headline not found"
+        
         profile_data = {
             'Name': name,
             'Headline': headline,
