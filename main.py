@@ -92,17 +92,23 @@ elif page == "Experts":
 
     for expert in filtered_experts:
         st.subheader(expert["name"])
-        st.write(f"Role: {expert['role']}")
-        st.write(f"Experience: {expert['experience']}")
-        st.subheader("Qualifications:")
-        for qualification in expert["qualifications"]:
-            st.write(f"- {qualification}")
-        st.subheader("Areas of Expertise:")
-        for area in expert["areas_of_expertise"]:
-            st.write(f"- {area}")
-        st.subheader("Tasks:")
-        for task in expert["tasks"]:
-            st.write(f"- {task}")
+        st.write(f"**Role:** {expert['role']}")
+        st.write(f"**Experience:** {expert['experience']}")
+        
+        with st.expander("View Details"):
+            st.subheader("Qualifications:")
+            for qualification in expert["qualifications"]:
+                st.write(f"- {qualification}")
+            
+            st.subheader("Areas of Expertise:")
+            for area in expert["areas_of_expertise"]:
+                st.write(f"- {area}")
+            
+            st.subheader("Tasks:")
+            for task in expert["tasks"]:
+                st.write(f"- {task}")
+        st.markdown("---")
+
 
 # Contact Page
 elif page == "Contact":
