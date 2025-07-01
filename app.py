@@ -2,7 +2,8 @@
 
 import streamlit as st
 import pandas as pd
-from scraper import scrape_linkedin_profile
+# Change this import line to match the new filename
+from linkedin_scraper import scrape_linkedin_profile
 
 st.set_page_config(page_title="LinkedIn Data Extractor", layout="centered")
 
