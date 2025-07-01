@@ -1,6 +1,6 @@
 import streamlit as st
 import pandas as pd
-from linkedin_scraper import scrape_linkedin_profile
+from scraper import scrape_linkedin_profile
 
 st.set_page_config(page_title="LinkedIn Profile Scraper", layout="wide")
 
